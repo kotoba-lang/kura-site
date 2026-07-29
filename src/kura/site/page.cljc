@@ -34,7 +34,15 @@
    :audit-share "0.005%"
    :repair-reads "4"
    :measured-distance "8"
-   :patterns-checked "657,800"})
+   :patterns-checked "657,800"
+   ;; Read from storj.dev/node/payouts and storj.io/pricing on 2026-07-29.
+   ;; A point-in-time reading, labelled as one on the page.
+   :storj-retail "$7.00"
+   :storj-node-storage "$1.50"
+   :storj-node-egress "$2.00"
+   :storj-multiplier "2.76×"
+   :storj-margin "41%"
+   :kura-margin "35%"})
 
 (def ^:private coordinator-url
   "https://kura-coordinator.04-feasts-minded.workers.dev")
@@ -99,7 +107,37 @@
    [:p {:class "hig-footnote"}
     (str "Egress is not multiplied by the code. A systematic read reconstructs "
          "nothing, so serving one logical TB moves one physical TB. Charging "
-         "egress at the storage multiplier would bill for work we do not do.")]))
+         "egress at the storage multiplier would bill for work we do not do.")]
+
+   [:h3 "Against Storj, and where the difference comes from"]
+   (ui/data-table
+    {:caption (str "Storj figures read from their published node payout schedule "
+                   "and pricing page on 2026-07-29 — a point-in-time reading, not a live feed.")
+     :columns [{:key :who :label ""}
+               {:key :retail :label "Retail / TB-month"}
+               {:key :mult :label "Expansion"}
+               {:key :cogs :label "Cost of goods"}
+               {:key :margin :label "Margin"}]
+     :rows [{:who "Storj" :retail (:storj-retail facts) :mult (:storj-multiplier facts)
+             :cogs "$4.14" :margin (:storj-margin facts)}
+            {:who "kura launch" :retail (:storage-price facts) :mult (:launch-multiplier facts)
+             :cogs "$3.00" :margin (:kura-margin facts)}
+            {:who "kura target" :retail (:target-price facts) :mult (:target-multiplier facts)
+             :cogs "$2.44" :margin (:kura-margin facts)}]})
+   [:p {:class "hig-body"}
+    (str "We pay node operators exactly what Storj publishes — "
+         (:storj-node-storage facts) " per TB-month and "
+         (:storj-node-egress facts) " per TB egress. So the cheaper price is "
+         "not an undercut of the people running the hardware, and it is not a "
+         "fatter margin either: ours is thinner. The entire difference is the "
+         "storage multiplier.")]
+   [:p {:class "hig-footnote"}
+    (str "Storj's own tokenomics update in July 2025 diagnosed their payment "
+         "token as a pass-through — bought on the market to pay operators, sold "
+         "by operators to pay power bills, net-neutral on price — and now "
+         "diverts 5% of monthly payouts into buybacks to manufacture holding "
+         "demand. That 5% is a cost a network settling in USDC does not carry, "
+         "which is the second reason there is no kura token.")]))
 
 (defn- operator-section []
   (ui/section
@@ -130,7 +168,14 @@
           "The registry is public, because a permissionless network whose "
           "participant list is private is not one anybody can check the "
           "failure-domain spread of.")]
-    [:p {:class "hig-footnote"} (str coordinator-url "/operator/registry")])))
+    [:p {:class "hig-footnote"} (str coordinator-url "/operator/registry")]
+    [:p {:class "hig-callout"}
+     (str "You can run one on hardware you already own. The filesystem backend "
+          "is part of the node software, and a machine somebody owns is the "
+          "only failure domain that can be added without opening an account "
+          "with anybody — which is exactly what the fleet is currently short "
+          "of.")]
+    [:p {:class "hig-footnote"} (str coordinator-url "/pricing")])))
 
 (defn- limits-section []
   (ui/section

@@ -27,6 +27,32 @@
   has run. Anyone quoting nines for a network that has not measured its own
   node population is quoting a model.
 
+## Against Storj — read 2026-07-29, point-in-time
+
+|  | retail / TB-month | expansion | cost of goods | margin |
+|---|---|---|---|---|
+| Storj | $7.00 | 2.76x | $4.14 | 41% |
+| kura launch | $4.62 (34% less) | 2.00x | $3.00 | 35% |
+| kura target | $3.75 (46% less) | 1.625x | $2.44 | 35% |
+
+We pay node operators exactly what Storj publishes: $1.50/TB-month storage and
+$2.00/TB egress (they pay the same $2.00 for audit/repair bandwidth). So the
+cheaper price is **not** an undercut of the people running hardware, and **not**
+a fatter margin — ours is thinner. The entire difference is the storage
+multiplier.
+
+Live and computed rather than typed:
+https://kura-coordinator.04-feasts-minded.workers.dev/pricing
+
+### Why there is still no token
+
+Storj's own July 2025 tokenomics update diagnosed their payment token as a
+pass-through: bought on the market to pay operators, sold by operators to pay
+power bills, net-neutral on price. Their fix diverts 5% of monthly payouts into
+buybacks to manufacture holding demand. That 5% is a cost a network settling in
+USDC does not carry. The incumbent's own restructuring is the strongest
+available argument against issuing one.
+
 ## Pricing (modelled)
 
 | configuration | multiplier | storage | egress |
@@ -56,7 +82,12 @@ opportunity cost.
   authentication, because nothing is at stake yet; when a bond is attached the
   registration must be signed by the key that posts it, and that is a different
   endpoint.
-- /operator/registry — who has registered, publicly. A permissionless network
+- /operator/registry — who has registered, publicly.
+- You can run a node on hardware you already own: the filesystem backend is
+  part of the node software, verified 19/19 against a real directory. A machine
+  somebody owns is the only failure domain addable without opening an account
+  with anybody — and the fleet is currently one short (2 domains, launch layout
+  needs 3, target needs 4). A permissionless network
   whose participant list is private is not one anybody can check the
   failure-domain spread of.
 
