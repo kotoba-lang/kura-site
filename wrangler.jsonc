@@ -1,0 +1,15 @@
+{
+  // kura public surface. Static assets only — no Worker script, because the
+  // page is server-rendered at build time by nbb (kura.site.page/render) and
+  // has nothing to compute at request time.
+  //
+  // Deployed to workers.dev deliberately rather than to a custom domain:
+  // ADR-2607177500 records a concurrent session taking a *.kotobase.net
+  // hostname out from under another Worker (last `wrangler deploy` wins on
+  // Cloudflare custom domains). Claiming a hostname is a decision with a
+  // contention cost; a workers.dev URL is a real public address with none.
+  "name": "kura-site",
+  "compatibility_date": "2026-07-01",
+  "assets": { "directory": "./public" },
+  "workers_dev": true
+}

@@ -1,0 +1,74 @@
+# kura 蔵
+
+> Erasure-coded object storage on independently operated nodes. Priced in USD,
+> settled in USDC on Base, no network token. Currently in Phase 0 — the coding,
+> placement, audit and settlement planes run against rented backends as
+> pseudo-nodes to measure the node-loss rate. NOT yet accepting customer data.
+
+## What is actually measured
+
+- Minimum distance of the k=16/r=4/g=6 code: **8**, established by exhaustive
+  search over all 657,800 seven-shard erasure patterns (zero failures) and all
+  1,562,275 eight-shard patterns (1,464 failures). It meets the Gopalan bound
+  rather than approaching it.
+- Single-shard repair: **4 reads, zero field multiplies.**
+- Audit cost: **0.005% of a node's capacity per year**, versus 1200% for a
+  monthly full scrub. 688 challenges catch 1% deletion at p=0.999.
+- Random sampling reported this code as tolerating one MORE loss than it does;
+  the exhaustive search found the 1,464 fatal patterns the sample never drew.
+  Sampling cannot measure worst-case erasure tolerance.
+
+## What is modelled, not measured
+
+- Every price and rate. Each carries `:provenance :modelled` or `:chosen` in
+  `kura-bugyo/pricing`, and none is `:observed`. Phase 0 replaces them.
+- The durability figure in nines. The code's distance is measured; the
+  node-loss rate that turns it into nines is not, and will not be until Phase 0
+  has run. Anyone quoting nines for a network that has not measured its own
+  node population is quoting a model.
+
+## Pricing (modelled)
+
+| configuration | multiplier | storage | egress |
+|---|---|---|---|
+| launch (today) | 2.00x | $4.62 / logical TB-month | $3.08 / TB |
+| target (after Phase 0) | 1.625x | $3.75 / logical TB-month | $3.08 / TB |
+
+Launch is conservative on purpose: launching optimistic and finding the
+node-loss rate is worse loses data irreversibly; launching conservative and
+finding it is better is a price cut. Egress is NOT multiplied by the code — a
+systematic read reconstructs nothing.
+
+## Node operators
+
+Permissionless. Bond is USDC, $7.50 per committed TB, priced against the
+repair bill rather than against what a cheat would gain. The bond is
+collateral and is returned; its real cost is ~4.1% of revenue at a 10%
+opportunity cost.
+
+## What this is NOT
+
+- Not a proof-of-storage chain. Audits are sampling plus collateral —
+  detection with an economic consequence, not Filecoin's continuous on-chain
+  proof. If you need public chain-verifiable proof, Filecoin is the right
+  choice.
+- Not trustless placement. A coordinator decides placement and payouts. It
+  cannot lie about a payout total or a node's share without contradicting a
+  published root, but it is a trusted point. Quorum coordination is planned,
+  not shipped.
+- Not independent by default. Shards on one provider's account are one failure
+  domain whatever the code says. Every backend must declare its independence.
+
+## Source
+
+- https://github.com/kotoba-lang/erasure — GF(2^8) locally recoverable codes
+- https://github.com/kotoba-lang/kura — placement, repair, audit, orders
+- https://github.com/kotoba-lang/kura-node — shard backends, fast GF, audit responder
+- https://github.com/kotoba-lang/kura-bugyo — pricing, collateral, epoch payout roots
+- https://github.com/kotoba-lang/kotobase-storage-kura — kotobase.storage adapter
+
+## Not offered yet
+
+There is no paid API endpoint and no x402 catalog entry. Registering one
+before the network accepts data would be the kind of overclaiming the rest of
+this document exists to avoid.
