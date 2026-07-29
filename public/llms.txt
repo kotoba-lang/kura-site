@@ -46,6 +46,20 @@ repair bill rather than against what a cheat would gain. The bond is
 collateral and is returned; its real cost is ~4.1% of revenue at a 10%
 opportunity cost.
 
+## Running a node — the door is open, the bond is not
+
+- https://kura-coordinator.04-feasts-minded.workers.dev/operator/quote?tb=50 —
+  what you would bond, earn and be audited on. Runs the same function the tests
+  and the site do, so it cannot drift from them.
+- POST /operator/register — records intent. **Takes no bond** (the escrow
+  contract is not deployed) and **places no data** (Phase 0 accepts none). No
+  authentication, because nothing is at stake yet; when a bond is attached the
+  registration must be signed by the key that posts it, and that is a different
+  endpoint.
+- /operator/registry — who has registered, publicly. A permissionless network
+  whose participant list is private is not one anybody can check the
+  failure-domain spread of.
+
 ## What this is NOT
 
 - Not a proof-of-storage chain. Audits are sampling plus collateral —

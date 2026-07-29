@@ -36,6 +36,9 @@
    :measured-distance "8"
    :patterns-checked "657,800"})
 
+(def ^:private coordinator-url
+  "https://kura-coordinator.04-feasts-minded.workers.dev")
+
 (defn- fact [label value detail]
   (ui/metric {:label label :value value :detail detail}))
 
@@ -114,7 +117,20 @@
     (str "The bond is priced against the repair bill, not against what a cheat "
          "would gain. A strong audit makes deterrence cheap; rebuilding what a "
          "departed node held is the expense that remains, and it is the larger "
-         "of the two.")]))
+         "of the two.")]
+   (ui/stack
+    {:gap :3}
+    [:p {:class "hig-callout"}
+     (str "Get your own numbers — the endpoint runs the same function this page "
+          "and the tests do, so it cannot drift from them:")]
+    [:p {:class "hig-footnote"} (str coordinator-url "/operator/quote?tb=50")]
+    [:p {:class "hig-callout"}
+     (str "Registering records intent. It takes no bond — the escrow contract "
+          "is not deployed — and places no data, because Phase 0 accepts none. "
+          "The registry is public, because a permissionless network whose "
+          "participant list is private is not one anybody can check the "
+          "failure-domain spread of.")]
+    [:p {:class "hig-footnote"} (str coordinator-url "/operator/registry")])))
 
 (defn- limits-section []
   (ui/section
