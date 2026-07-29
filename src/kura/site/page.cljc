@@ -170,11 +170,21 @@
           "failure-domain spread of.")]
     [:p {:class "hig-footnote"} (str coordinator-url "/operator/registry")]
     [:p {:class "hig-callout"}
-     (str "You can run one on hardware you already own. The filesystem backend "
-          "is part of the node software, and a machine somebody owns is the "
-          "only failure domain that can be added without opening an account "
-          "with anybody — which is exactly what the fleet is currently short "
-          "of.")]
+     (str "You can run one on hardware you already own, today. A machine "
+          "somebody owns is the only failure domain that can be added without "
+          "opening an account with anybody — which is exactly what the fleet "
+          "is currently short of.")]
+    [:pre {:class "hig-footnote"}
+     (str "nbb script/run_node.cljs --root ~/kura-data --port 8080 \\\n"
+          "  --node-id my-node --operator alice --site home")]
+    [:p {:class "hig-footnote"}
+     (str "It serves the same contract a rented bucket does, so self-hosting is "
+          "not a special case anywhere in the system, and GET /self-check runs "
+          "the whole contract against your disk. Three things it is not: not "
+          "authenticated (Phase 0 holds no customer data, and accepting any is "
+          "refused by an assertion rather than a TODO); not reachable just "
+          "because a port is bound; and not redundant on its own — absorbing a "
+          "lost shard is the code's job, not your disk's.")]
     [:p {:class "hig-footnote"} (str coordinator-url "/pricing")])))
 
 (defn- limits-section []
