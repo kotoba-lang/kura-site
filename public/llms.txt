@@ -67,6 +67,11 @@ opportunity cost.
 - https://kura-conformance.04-feasts-minded.workers.dev/status — the probe
   series: per-backend availability, median read latency, and an explicit
   refusal to quote a node-loss rate until the window reaches 168 hours.
+- https://kura-conformance.04-feasts-minded.workers.dev/durability — stores an
+  object across both providers, destroys shards on purpose, repairs, and
+  compares recovered bytes. One shard lost costs 4 reads. Seven lost (the
+  measured limit) still recovers. Eight is REFUSED rather than attempted and
+  silently wrong; the route returns 500 if any scenario deviates.
 - https://kura-conformance.04-feasts-minded.workers.dev/audit — how many
   genuinely independent failure domains the fleet has. It currently answers
   NO: two providers spread 32 shards 16-and-16, and the code tolerates 13.

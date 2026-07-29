@@ -164,14 +164,20 @@
                [:p {:class "hig-callout"}
                 "The probe series: availability per backend, median read latency, and an explicit refusal to quote a rate until the window is long enough."]
                [:p {:class "hig-footnote"} (str conformance-url "/status")]])
+    (ui/panel [[:h3 "Durability, demonstrated"]
+               [:p {:class "hig-callout"}
+                (str "Stores an object across both providers, destroys shards on purpose, "
+                     "repairs, and compares the recovered bytes. One shard lost costs four "
+                     "reads. Eight lost is refused rather than guessed at.")]
+               [:p {:class "hig-footnote"} (str conformance-url "/durability")]])
     (ui/panel [[:h3 "Fleet audit"]
                [:p {:class "hig-callout"}
                 "How many genuinely independent failure domains the fleet has. It currently says the fleet is NOT survivable — two providers, and the code needs at least three."]
                [:p {:class "hig-footnote"} (str conformance-url "/audit")]]))
    [:p {:class "hig-footnote"}
-    (str "The audit answering no is the reason to trust the rest. A status page "
-         "that only ever reports success is a status page nobody wired to "
-         "anything.")]))
+    (str "The audit answering no, and the durability run including a case that "
+         "must fail, are the reasons to trust the rest. A status page that only "
+         "ever reports success is a status page nobody wired to anything.")]))
 
 (defn- build-section []
   (ui/section
