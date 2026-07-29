@@ -145,6 +145,34 @@
                 "independence, and the audit reports when a placement collapses "
                 "into fewer real domains than the code needs.")))))
 
+(def ^:private conformance-url
+  "https://kura-conformance.04-feasts-minded.workers.dev")
+
+(defn- live-section []
+  (ui/section
+   {:title "Live, not asserted" :wide true}
+   [:p {:class "hig-body"}
+    (str "The claims above are checkable while you read them. The contract runs "
+         "against real buckets at two providers every thirty minutes, and the "
+         "results are URLs, not screenshots.")]
+   (ui/grid
+    (ui/panel [[:h3 "Conformance"]
+               [:p {:class "hig-callout"}
+                "The shard-store contract against Cloudflare R2 and Backblaze B2. Returns 500 if anything fails, so it works as a check."]
+               [:p {:class "hig-footnote"} (str conformance-url "/conformance")]])
+    (ui/panel [[:h3 "Status"]
+               [:p {:class "hig-callout"}
+                "The probe series: availability per backend, median read latency, and an explicit refusal to quote a rate until the window is long enough."]
+               [:p {:class "hig-footnote"} (str conformance-url "/status")]])
+    (ui/panel [[:h3 "Fleet audit"]
+               [:p {:class "hig-callout"}
+                "How many genuinely independent failure domains the fleet has. It currently says the fleet is NOT survivable — two providers, and the code needs at least three."]
+               [:p {:class "hig-footnote"} (str conformance-url "/audit")]]))
+   [:p {:class "hig-footnote"}
+    (str "The audit answering no is the reason to trust the rest. A status page "
+         "that only ever reports success is a status page nobody wired to "
+         "anything.")]))
+
 (defn- build-section []
   (ui/section
    {:title "Built in the open" :wide true}
@@ -163,6 +191,7 @@
                      {:trailing [(ui/button "Source" {:act :source})]})}
    (hero-block)
    (honesty-section)
+   (live-section)
    (pricing-section)
    (operator-section)
    (limits-section)

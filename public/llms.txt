@@ -59,6 +59,20 @@ opportunity cost.
 - Not independent by default. Shards on one provider's account are one failure
   domain whatever the code says. Every backend must declare its independence.
 
+## Live, checkable now
+
+- https://kura-conformance.04-feasts-minded.workers.dev/conformance — the
+  shard-store contract against real Cloudflare R2 and Backblaze B2 buckets.
+  Returns 500 if anything fails.
+- https://kura-conformance.04-feasts-minded.workers.dev/status — the probe
+  series: per-backend availability, median read latency, and an explicit
+  refusal to quote a node-loss rate until the window reaches 168 hours.
+- https://kura-conformance.04-feasts-minded.workers.dev/audit — how many
+  genuinely independent failure domains the fleet has. It currently answers
+  NO: two providers spread 32 shards 16-and-16, and the code tolerates 13.
+  At least three domains are needed for the launch layout, four for the
+  target. The audit answering no is the reason to trust the rest.
+
 ## Source
 
 - https://github.com/kotoba-lang/erasure — GF(2^8) locally recoverable codes
