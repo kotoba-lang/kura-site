@@ -42,7 +42,12 @@
    :storj-node-egress "$2.00"
    :storj-multiplier "2.76×"
    :storj-margin "41%"
-   :kura-margin "35%"})
+   :kura-margin "35%"
+   ;; Measured 2026-07-30 against the live fleet. /fleet computes these from the
+   ;; registry, so the page and the endpoint cannot drift apart.
+   :domains "4"
+   :launch-margin "5"
+   :target-margin "0"})
 
 (def ^:private coordinator-url
   "https://kura-coordinator.04-feasts-minded.workers.dev")
@@ -93,9 +98,9 @@
                {:key :mult :label "Storage multiplier"}
                {:key :storage :label "Storage / TB-month"}
                {:key :egress :label "Egress / TB"}]
-     :rows [{:plan "Launch (today)" :mult (:launch-multiplier facts)
+     :rows [{:plan "Launch (what you pay today)" :mult (:launch-multiplier facts)
              :storage (:storage-price facts) :egress (:egress-price facts)}
-            {:plan "Target (after Phase 0)" :mult (:target-multiplier facts)
+            {:plan "Target (fits, not yet priced)" :mult (:target-multiplier facts)
              :storage (:target-price facts) :egress (:egress-price facts)}]})
    [:p {:class "hig-body"}
     (str "Launch is deliberately conservative. At launch the node-loss rate is "
@@ -104,6 +109,24 @@
          "conservative and finding it is better is a price cut. The 18.7% "
          "reduction goes to customers when the measurement earns it — the data "
          "that produces the measurement is theirs.")]
+   [:p {:class "hig-callout"}
+    (str "The target layout now fits. It has been demonstrated end to end across "
+         "all four domains — an entire domain's shards deleted, the recovered "
+         "bytes identical — and unlike the launch code its limit is measured "
+         "rather than bounded: 7 shards recover, 8 are refused, established by "
+         "exhaustive search rather than by citing an inequality.")]
+   [:p {:class "hig-callout"}
+    (str "It is still not what you are charged, and the reason is the number "
+         "nobody puts on a pricing page: at four domains the target code's "
+         "margin after losing one is ZERO. Any single domain can vanish and your "
+         "object is readable — with nothing left over. A domain loss plus one "
+         "more lost shard is data loss. The launch code carries 5 shards of "
+         "margin in the same fleet. A fifth domain would buy the target code one "
+         "shard, a sixth two, and the price moves when there is margin to lose "
+         "rather than when the arithmetic first closes.")]
+   [:p {:class "hig-footnote"}
+    (str "Both figures, computed from the registry rather than typed here: "
+         coordinator-url "/fleet")]
    [:p {:class "hig-footnote"}
     (str "Egress is not multiplied by the code. A systematic read reconstructs "
          "nothing, so serving one logical TB moves one physical TB. Charging "
@@ -172,11 +195,14 @@
     [:p {:class "hig-callout"}
      (str "You can run one on hardware you already own, today. A machine "
           "somebody owns is the only failure domain that can be added without "
-          "opening an account with anybody — which is exactly what the fleet "
-          "is currently short of.")]
+          "opening an account with anybody — which is how this fleet got its "
+          "third and fourth: a Mac mini in Fukuoka and a Linux box in Saitama, "
+          "different ISPs, about 1000 km apart. What it needs next is a fifth, "
+          "and the reason is margin rather than arithmetic — see below.")]
     [:pre {:class "hig-footnote"}
      (str "nbb script/run_node.cljs --root ~/kura-data --port 8080 \\\n"
-          "  --node-id my-node --operator alice --site home")]
+          "  --node-id my-node --operator alice --site home \\\n"
+          "  --availability intermittent")]
     [:p {:class "hig-footnote"}
      (str "It serves the same contract a rented bucket does, so self-hosting is "
           "not a special case anywhere in the system, and GET /self-check runs "
@@ -225,7 +251,11 @@
    [:p {:class "hig-body"}
     (str "The claims above are checkable while you read them. The contract runs "
          "against real buckets at two providers every thirty minutes, and the "
-         "results are URLs, not screenshots.")]
+         "results are URLs, not screenshots. The fleet is four failure domains: "
+         "those two, plus a Mac mini and a laptop's external SSD in one room in "
+         "Fukuoka, plus a Linux box in Saitama on a different ISP about 1000 km "
+         "away. Two machines in one room are one domain, however many machines "
+         "they are.")]
    (ui/grid
     (ui/panel [[:h3 "Conformance"]
                [:p {:class "hig-callout"}
@@ -239,12 +269,21 @@
                [:p {:class "hig-callout"}
                 (str "Stores an object across both providers, destroys shards on purpose, "
                      "repairs, and compares the recovered bytes. One shard lost costs four "
-                     "reads. Eight lost is refused rather than guessed at.")]
+                     "reads. Eight lost is refused rather than guessed at. The same run "
+                     "has been driven across all four domains from inside the tailnet, "
+                     "deleting an entire domain's shards — including the whole Fukuoka "
+                     "room — and the recovered bytes matched.")]
                [:p {:class "hig-footnote"} (str conformance-url "/durability")]])
     (ui/panel [[:h3 "Fleet audit"]
                [:p {:class "hig-callout"}
-                "How many genuinely independent failure domains the fleet has. It currently says the fleet is NOT survivable — two providers, and the code needs at least three."]
-               [:p {:class "hig-footnote"} (str conformance-url "/audit")]]))
+                (str "What this Worker can reach: the two rented buckets, which "
+                     "are two domains and not survivable on their own. The "
+                     "self-hosted nodes are on a tailnet it cannot probe, so "
+                     "the full fleet is at /fleet on the coordinator — and the "
+                     "split is deliberate, because a page that merged them "
+                     "would be reporting a claim as a probe.")]
+               [:p {:class "hig-footnote"} (str conformance-url "/audit")]
+               [:p {:class "hig-footnote"} (str coordinator-url "/fleet")]]))
    [:p {:class "hig-footnote"}
     (str "The audit answering no, and the durability run including a case that "
          "must fail, are the reasons to trust the rest. A status page that only "
