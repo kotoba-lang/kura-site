@@ -200,7 +200,7 @@
           "different ISPs, about 1000 km apart. What it needs next is a fifth, "
           "and the reason is margin rather than arithmetic — see below.")]
     [:pre {:class "hig-footnote"}
-     (str "nbb script/run_node.cljs --root ~/kura-data --port 8080 \\\n"
+     (str "kbb --backend sci script/run_node.cljk --root ~/kura-data --port 8080 \\\n"
           "  --node-id my-node --operator alice --site home \\\n"
           "  --availability intermittent")]
     [:p {:class "hig-footnote"}

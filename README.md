@@ -32,7 +32,7 @@ gate: aggregate 100.00 >= min 95.00 -> PASS
 ## Build and deploy
 
 ```bash
-nbb --classpath "src:$KL/css/src:$KL/html/src:$KL/shitsuke/src:$KL/liquid-glass-ui/src:$KL/kotoba-ui/src" generate.cljk
+kbb --backend sci --classpath "src:$KL/css/src:$KL/html/src:$KL/shitsuke/src:$KL/liquid-glass-ui/src:$KL/kotoba-ui/src" generate.cljk
 npx wrangler deploy
 ```
 
